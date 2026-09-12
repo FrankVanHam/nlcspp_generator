@@ -1,27 +1,26 @@
 [build-system]
-requires = ["setuptools>=69"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "nlcspp-generator"
 version = "0.1.0"
-description = "Generate deterministic NLCS++ XSD files from information-model workbooks"
-readme = "README.md"
+description = "Generate NLCS Netbeheer XSD files from Excel workbooks"
 requires-python = ">=3.11"
 dependencies = [
     "openpyxl>=3.1,<4",
-    "xlrd>=2.0,<3",
+    "xlrd>=2,<3",
 ]
 
 [project.optional-dependencies]
-test = ["pytest>=8,<9"]
+test = ["pytest>=8,<10"]
 
 [project.scripts]
-nlcspp-generate = "nlcspp_generator.cli:main"
+nlcspp-generator = "nlcspp_generator.cli:main"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-addopts = "-q"

@@ -1,40 +1,43 @@
+
+
 # NLCS++ Generator
 
-Generate a deterministic NLCS++ XSD from the Netbeheer information-model workbooks.
+Generates the NLCS Netbeheer base XSD and a netbeheerder-specific choice-list
+XSD from the source Excel workbooks.
 
-## Inputs
-
-The generator uses two source workbooks:
-
-- `InformatiemodelNetbeheer*.xlsx` supplies objects and attributes from columns `AV:BF` of the `Informatiemodel` worksheet.
-- `domains_*.xls` supplies domain definitions and values from the `domains` and `domain_values` worksheets.
-
-When exactly one `domains_*.xls` file is beside the model workbook, it is discovered automatically. Otherwise, pass it explicitly with `--domains`.
-
-## Installation
+## Install
 
 ```powershell
-python -m pip install -e ".[test]"
+py -m pip install -e ".[test]"
 ```
 
-## Usage
+## Generate
+
+From this directory:
 
 ```powershell
-nlcspp-generate path\to\InformatiemodelNetbeheerv12.1.xlsx output\NLCS_Netbeheer.xsd
+py -m nlcspp_generator.cli ..\training\input generated
 ```
 
-Explicit domain workbook and version:
+Stedin is selected by default. Other accepted values are `Enexis`, `Liander`,
+and `Alliander`; `Alliander` is treated as an alias for `Liander`.
 
 ```powershell
-nlcspp-generate model.xlsx output.xsd --domains domains.xls --version 12.1
+py -m nlcspp_generator.cli ..\training\input generated --netbeheerder Stedin
 ```
 
-The output format is intentionally fixed: UTF-8 with BOM, CRLF line endings, tabs for indentation, stable attribute ordering, and no final newline.
+The program identifies the information-model and domain workbooks by their
+sheet structure, ignores Excel `~$` lock files, and infers the schema version
+from the information-model workbook name.
 
-## Verification
+## Verify
 
 ```powershell
-python -m pytest
+py -m pytest -q
 ```
 
-The golden test generates the v12.1 schema and compares it byte-for-byte with the reference file in `training/output`.
+The integration tests compare both generated Stedin files byte-for-byte with
+the training outputs, including the UTF-8 BOM, CRLF line endings, tabs, XML
+escaping, and absence of a trailing newline.
+
+

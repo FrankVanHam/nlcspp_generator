@@ -1,36 +1,31 @@
 from __future__ import annotations
 
 import argparse
-import sys
 from pathlib import Path
 
-from .generator import generate_xsd
-from .workbook import WorkbookError
+from .generator import generate
 
 
-def _default_domains(model_path: Path) -> Path | None:
-    matches = sorted(model_path.parent.glob("domains_*.xls"))
-    return matches[0] if len(matches) == 1 else None
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="Generate NLCS Netbeheer XSD files from Excel workbooks"
+    )
+    parser.add_argument("input_directory", type=Path)
+    parser.add_argument("output_directory", type=Path)
+    parser.add_argument(
+        "--netbeheerder",
+        default="Stedin",
+        choices=("Stedin", "Enexis", "Liander", "Alliander"),
+    )
+    arguments = parser.parse_args()
+    generated = generate(
+        arguments.input_directory,
+        arguments.output_directory,
+        arguments.netbeheerder,
+    )
+    print(generated.base_schema)
+    print(generated.selection_schema)
 
 
-def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Generate an NLCS++ XSD from Excel workbooks")
-    parser.add_argument("model", type=Path, help="Informatiemodel .xlsx file")
-    parser.add_argument("output", type=Path, help="Destination .xsd file")
-    parser.add_argument("--domains", type=Path, help="Domain definitions .xls file")
-    parser.add_argument("--version", help="Schema version (normally inferred from the model filename)")
-    return parser
-
-
-def main(argv: list[str] | None = None) -> int:
-    args = build_parser().parse_args(argv)
-    domains = args.domains or _default_domains(args.model)
-    if domains is None:
-        print("error: pass --domains or place exactly one domains_*.xls beside the model", file=sys.stderr)
-        return 2
-    try:
-        generate_xsd(args.model, domains, args.output, args.version)
-    except (OSError, WorkbookError, ValueError) as error:
-        print(f"error: {error}", file=sys.stderr)
-        return 1
-    return 0
+if __name__ == "__main__":
+    main()

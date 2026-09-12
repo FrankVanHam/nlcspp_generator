@@ -1,2 +1,5 @@
 src/nlcspp_generator/__pycache__/*
 src/nlcspp_generator/*.pyc
+tests/__pycache__/
+.pytest_cache/
+*.egg-info/

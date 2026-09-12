@@ -1,5 +1,3 @@
-"""NLCS++ XSD generator."""
+"""NLCS Netbeheer schema generator."""
 
-from .generator import generate_xsd
-
-__all__ = ["generate_xsd"]
+__version__ = "0.1.0"

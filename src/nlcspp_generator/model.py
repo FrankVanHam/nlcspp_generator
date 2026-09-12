@@ -1,33 +1,41 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
-class AttributeDefinition:
-    feature_name: str
+class Domain:
     name: str
-    data_type: str
-    length: int | None
-    domain_name: str | None
-    required: bool
-    geometry_type: str | None
-    source_row: int
-
-
-@dataclass(frozen=True)
-class FeatureDefinition:
-    name: str
-    attributes: tuple[AttributeDefinition, ...]
+    values: tuple[str, ...]
 
 
 @dataclass(frozen=True)
 class DomainDefinition:
     name: str
-    structured: bool
-    values: tuple[str, ...]
+    description: str
+    data_type: str
+    is_closed_in_base_schema: bool
 
 
 @dataclass(frozen=True)
-class InformationModel:
-    version: str
-    features: tuple[FeatureDefinition, ...]
-    domains: tuple[DomainDefinition, ...]
+class DomainValue:
+    domain_name: str
+    value: str
+    deleted: bool
+    companies: frozenset[str]
+    source_row: int
+
+
+@dataclass(frozen=True)
+class Property:
+    name: str
+    type_name: str
+    required: bool
+    max_length: int | None = None
+    source_row: int | None = None
+
+
+@dataclass(frozen=True)
+class Feature:
+    name: str
+    properties: tuple[Property, ...]
