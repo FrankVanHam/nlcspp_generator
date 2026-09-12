@@ -9,6 +9,7 @@ XSD from the source Excel workbooks.
 Create a directory with 2 input files:
 * domains_InformatiemodelNetbeheerV12.1.xls
 * InformatiemodelNetbeheerv12.1.xlsx
+
 In this example the value "12.1" is the version. This value can be changed by replacing it with another number like 13.0
 
 
