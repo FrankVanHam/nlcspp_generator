@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import pytest
+
 from nlcspp_generator.domains import load_domain_catalog
 from nlcspp_generator.information_model import (
     load_features,
@@ -34,10 +36,9 @@ def test_renders_stedin_selection_schema_byte_for_byte() -> None:
     assert generated == SELECTION_GOLDEN.read_bytes()
 
 
-def test_alliander_is_an_alias_for_liander() -> None:
+def test_alliander_is_not_an_input_option() -> None:
     catalog = load_domain_catalog(DOMAIN_WORKBOOK)
     order = tuple(definition.name for definition in catalog.definitions)
 
-    assert catalog.select_open_domains("Alliander", order) == catalog.select_open_domains(
-        "Liander", order
-    )
+    with pytest.raises(ValueError, match="Unknown netbeheerder 'Alliander'"):
+        catalog.select_open_domains("Alliander", order)

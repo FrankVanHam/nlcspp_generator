@@ -7,7 +7,7 @@ import tempfile
 
 from .base_schema import render_base_schema
 from .discovery import locate_input_sources
-from .domains import COMPANY_ALIASES, load_domain_catalog
+from .domains import load_domain_catalog
 from .information_model import (
     base_schema_domain_order,
     load_features,
@@ -31,7 +31,6 @@ def generate(
     output_directory: Path,
     netbeheerder: str = "Stedin",
 ) -> GeneratedFiles:
-    canonical_company = COMPANY_ALIASES.get(netbeheerder, netbeheerder)
     sources = locate_input_sources(input_directory)
     source_features = load_features(sources.information_model)
     try:
@@ -48,7 +47,7 @@ def generate(
         base_schema_domain_order(project_feature, features)
     )
     selection_domains = catalog.select_open_domains(
-        canonical_company, selection_schema_domain_order(source_features)
+        netbeheerder, selection_schema_domain_order(source_features)
     )
 
     base_bytes = render_base_schema(
@@ -58,7 +57,7 @@ def generate(
         selection_domains, BASE_SCHEMA_NAME, sources.version
     )
     selection_name = (
-        f"NLCS_Netbeheer{canonical_company}V{sources.version}Import_Keuzelijst.xsd"
+        f"NLCS_Netbeheer{netbeheerder}V{sources.version}Import_Keuzelijst.xsd"
     )
     output_directory.mkdir(parents=True, exist_ok=True)
     base_path = output_directory / BASE_SCHEMA_NAME

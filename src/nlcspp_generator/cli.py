@@ -15,7 +15,7 @@ def main() -> None:
     parser.add_argument(
         "--netbeheerder",
         default="Stedin",
-        choices=("Stedin", "Enexis", "Liander", "Alliander"),
+        choices=("Stedin", "Enexis", "Liander"),
     )
     arguments = parser.parse_args()
     generated = generate(

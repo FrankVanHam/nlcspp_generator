@@ -19,8 +19,7 @@ From this directory:
 py -m nlcspp_generator.cli ..\training\input generated
 ```
 
-Stedin is selected by default. Other accepted values are `Enexis`, `Liander`,
-and `Alliander`; `Alliander` is treated as an alias for `Liander`.
+Stedin is selected by default. Other accepted values are `Enexis` and `Liander`.
 
 ```powershell
 py -m nlcspp_generator.cli ..\training\input generated --netbeheerder Stedin

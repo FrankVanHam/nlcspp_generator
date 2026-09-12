@@ -15,7 +15,6 @@ COMPANY_COLUMNS = {
     "Stedin": "Stedin",
     "Enexis": "Enexis",
 }
-COMPANY_ALIASES = {"Alliander": "Liander"}
 
 
 @dataclass(frozen=True)
@@ -28,15 +27,14 @@ class DomainCatalog:
         company: str,
         base_domain_order: tuple[str, ...],
     ) -> tuple[Domain, ...]:
-        canonical_company = COMPANY_ALIASES.get(company, company)
-        if canonical_company not in COMPANY_COLUMNS:
+        if company not in COMPANY_COLUMNS:
             supported = ", ".join(COMPANY_COLUMNS)
             raise ValueError(f"Unknown netbeheerder {company!r}; choose one of {supported}")
 
         definitions = {definition.name: definition for definition in self.definitions}
         selected_values: dict[str, set[str]] = {}
         for domain_value in self.values:
-            if domain_value.deleted or canonical_company not in domain_value.companies:
+            if domain_value.deleted or company not in domain_value.companies:
                 continue
             selected_values.setdefault(domain_value.domain_name, set()).add(domain_value.value)
 
